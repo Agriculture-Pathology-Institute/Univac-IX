@@ -1,0 +1,141 @@
+import os
+import sys
+import numpy as np
+from numba import njit, prange
+import cupy as cp  # Allocates processing natively inside the Dual NVIDIA L4 GPUs
+
+try:
+    import cosmos_xenna.pipelines.v1 as pipelines_v1
+except ImportError:
+    pipelines_v1 = object
+
+class TurnkeyNodeTypes:
+    AGRICULTURE = 0x0A  # Ingests crop, soil, and automated harvesting telemetry
+    CONSTRUCTION = 0x0C # Ingests crane stress, physical loads, and hydraulic tracking
+
+class TurnkeyIndustrialBridgeStage(pipelines_v1.Stage):
+    """
+    NVIDIA Cosmos-Xenna Pipeline Stage modeling historical Turnkey Automation Nodes.
+    Decodes physical asset telemetry across 64 CPU cores and accelerates
+    world-prediction math using dual NVIDIA L4 GPUs.
+    """
+    
+    @property
+    def stage_batch_size(self) -> int:
+        return 25000  # High-throughput batch size for high-density sensor grids
+
+    @property
+    def required_resources(self) -> pipelines_v1.Resources:
+        # Request maximum hardware capabilities for the tiger-vis server profile
+        return pipelines_v1.Resources(
+            gpus=2.0,            # Consumes both available NVIDIA L4 graphic processing units
+            cpus=float(os.cpu_count() or 64), # Fully utilizes all available multi-core threads
+            is_spmd=True         # Activates Single Program Multiple Data cluster scaling
+        )
+
+    def setup(self, worker_metadata: pipelines_v1.WorkerMetadata) -> None:
+        """Runs once per cluster worker to stabilize the hardware mapping layer."""
+        self.worker_id = worker_metadata.distributed_execution_params.rank
+        self.gpu_count = cp.cuda.runtime.getDeviceCount()
+        print(f"[TURNKEY-BRIDGE] Worker {self.worker_id} Online. Dual-GPU Path Bound: {self.gpu_count} Devices Ready.")
+
+    def process_data(self, telemetry_samples: list) -> list:
+        """
+        Ingests, splits, and processes raw Turnkey node strings.
+        Balances calculations evenly between both available NVIDIA graphics engines.
+        """
+        # Convert the payload batch into a high-performance numpy matrix
+        sensor_matrix = np.array([s.get("data") for s in telemetry_samples], dtype=np.float32)
+        node_type = telemetry_samples[0].get("node_type", TurnkeyNodeTypes.AGRICULTURE)
+
+        # 1. Distribute raw data validation over the multi-core CPU threads via Numba
+        validated_matrix = _parallel_turnkey_preprocessor(sensor_matrix, node_type)
+
+        # 2. Divide data arrays evenly to balance execution over both L4 GPUs
+        midpoint = len(validated_matrix) // 2
+        block_0 = validated_matrix[:midpoint]
+        block_1 = validated_matrix[midpoint:]
+
+        # Execute Block 0 on NVIDIA L4 GPU Device 0
+        with cp.cuda.Device(0):
+            gpu_arr_0 = cp.array(block_0, dtype=cp.float32)
+            # Run Physical AI spatial transformation matrix
+            cuda_out_0 = cp.asnumpy(cp.tanh(gpu_arr_0) * 100.0)
+
+        # Execute Block 1 on NVIDIA L4 GPU Device 1
+        with cp.cuda.Device(1):
+            gpu_arr_1 = cp.array(block_1, dtype=cp.float32)
+            cuda_out_1 = cp.asnumpy(cp.tanh(gpu_arr_1) * 100.0)
+
+        # Recombine calculations back into a single system thread array
+        final_projections = np.concatenate((cuda_out_0, cuda_out_1), axis=0)
+
+        # 3. Package output markers back into the queue for the Visio hazard monitor
+        output_packets = []
+        for i in range(len(final_projections)):
+            load_factor = float(np.mean(final_projections[i]))
+            status_flag = "Critical" if load_factor > 85.0 else "Nominal"
+            
+            output_packets.append({
+                "node_id": telemetry_samples[i].get("id"),
+                "computed_load": load_factor,
+                "status": status_flag
+            })
+
+        return output_packets
+
+
+@njit(parallel=True, fastmath=True)
+def _parallel_turnkey_preprocessor(data: np.ndarray, type_flag: int) -> np.ndarray:
+    """
+    Compiles a thread-safe Numba kernel that parallelizes raw data conversions
+    across all 64 CPU cores concurrently based on the target industrial node type.
+    """
+    rows, cols = data.shape
+    cleaned_output = np.zeros((rows, cols), dtype=np.float32)
+
+    for i in prange(rows):
+        for j in range(cols):
+            val = data[i, j]
+            if type_flag == TurnkeyNodeTypes.AGRICULTURE:
+                # Agricultural Mapping Loop: Standardizes soil moisture / canopy metrics
+                cleaned_output[i, j] = val if (val >= 0.0 and val <= 100.0) else 50.0
+            elif type_flag == TurnkeyNodeTypes.CONSTRUCTION:
+                # Construction Mapping Loop: Converts raw mechanical strain into metric tons
+                cleaned_output[i, j] = val * 1.01605 if val > 0.0 else 0.0
+                
+    return cleaned_output
+
+
+# --- Pipeline Execution Verification Suite ---
+if __name__ == "__main__":
+    print("=== Testing Turnkey Industrial Bridge Node Deployment ===")
+    
+    # 1. Simulate 10,000 incoming construction node crane-stress streams
+    print("\n[Step 1] Constructing mock physical construction tracking matrix...")
+    mock_samples = [
+        {
+            "id": f"TK-CON-{idx:04d}",
+            "node_type": TurnkeyNodeTypes.CONSTRUCTION,
+            "data": np.random.uniform(10.0, 95.0, size=4).tolist()
+        }
+        for idx in range(10000)
+    ]
+    
+    # 2. Emulate an execution worker update cycle
+    class MockWorkerMetadata:
+        class DistParams:
+            rank = 0
+            world_size = 1
+        distributed_execution_params = DistParams()
+
+    # Instantiate and spin up the node pipelines
+    stage = TurnkeyIndustrialBridgeStage()
+    stage.setup(MockWorkerMetadata())
+    
+    results = stage.process_data(mock_samples)
+    critical_alerts = sum(1 for r in results if r["status"] == "Critical")
+    
+    print(f"\n✓ Multi-Core Preprocessor and Dual-GPU Matrix Split complete.")
+    print(f"👉 Total Turnkey Records Carved: {len(results)}")
+    print(f"👉 Flagged Critical Hazards    : {critical_alerts}")
