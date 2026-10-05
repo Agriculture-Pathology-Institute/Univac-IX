@@ -59,3 +59,14 @@ telemetry_visio_exporter:
       is_spmd: true
     data_stream_source: "satellite_telemetry.raw"
     visio_tracking_id: "N-05"
+
+      - stage_name: "Stage_04_Stellar_PLA_Traffic_Orchestrator"
+    module_class: "stellar_traffic_stage.StellarPlaTrafficOrchestratorStage"
+    batch_size: 40000
+    resource_allocation:
+      cpus: 16.0
+      gpus: 0.4
+      is_spmd: true
+    data_stream_source: "stellar_pla_grid.raw"
+    visio_tracking_id: "N-06"
+
