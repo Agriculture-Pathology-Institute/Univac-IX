@@ -4,6 +4,7 @@ import csv
 import time
 import pathlib
 import sys
+import email_alerts
 
 # Inject workspace directory hooks
 WORKSPACE_ROOT = pathlib.Path(__file__).parent.resolve()
@@ -117,6 +118,21 @@ def run_report_synchronizer(target_csv: str = "visio_mapping.csv", poll_interval
                             template_name="report_template.html",
                             output_name="execution_report.html"
                         )
+
+# Re-compile and deploy the HTML dashboard upon change detection
+if trigger_report_update:
+    update_report.compile_execution_report_card(
+        stellar_count=stellar_flushes,
+        biomass_count=biomass_flushes,
+        peaks=peak_metrics,
+        template_name="report_template.html",
+        output_name="execution_report.html"
+    )
+
+    # AUTOMATED EMAIL DISPATCH TRIGGER
+    # Check if any new newly captured critical instance initialized this cycle change
+    if len(current_critical_nodes) > len(previous_critical_states):
+        email_alerts.send_critical_report_email(report_path="execution_report.html")
 
             time.sleep(poll_interval)
 
