@@ -86,6 +86,15 @@ def run_real_time_telemetry_streamer(target_csv: str = "visio_mapping.csv", stre
             "shape_type": "Process",
             "link": ""
         }
+            {
+            "id": "N-11", 
+            "name": "Siemens_S7_PLC_Core", 
+            "hardware": "DUAL_L4_CO_PROCESSING", 
+            "load": 48.0, 
+            "status": "Nominal", 
+            "shape_type": "Process",
+            "link": ""
+        }
     ]
 
     cycle_count = 0
