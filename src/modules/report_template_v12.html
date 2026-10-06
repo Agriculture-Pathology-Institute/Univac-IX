@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNIVAC-IX Core Fabric: Infrastructure Segment Report Card</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #0f172a; color: #f8fafc; padding: 30px; margin: 0; }
+        .container { max-width: 1100px; margin: 0 auto; background: #1e293b; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: 1px solid #334155; }
+        h1 { color: #38bdf8; margin-top: 0; border-bottom: 2px solid #334155; padding-bottom: 12px; font-size: 24px; letter-spacing: -0.5px; }
+        h2 { color: #94a3b8; font-size: 16px; margin-top: 30px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; border-left: 4px solid #38bdf8; padding-left: 8px; }
+        .grid-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .metric-card { background: #0f172a; padding: 15px; border-radius: 8px; border: 1px solid #475569; text-align: center; }
+        .metric-title { font-size: 11px; text-transform: uppercase; color: #94a3b8; font-weight: 600; letter-spacing: 0.5px; }
+        .metric-value { font-size: 26px; font-weight: bold; color: #38bdf8; margin-top: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 5px; text-align: left; background-color: #0f172a; border-radius: 6px; overflow: hidden; border: 1px solid #334155; }
+        th { background-color: #090d16; color: #94a3b8; font-size: 12px; text-transform: uppercase; padding: 12px; font-weight: 600; border-bottom: 2px solid #334155; }
+        td { padding: 12px; font-size: 14px; border-bottom: 1px solid #273549; color: #cbd5e1; }
+        tr:last-child td { border-bottom: none; }
+        .status-badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        .status-badge.nominal { background-color: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+        .status-badge.critical { background-color: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .footer { font-size: 11px; color: #64748b; text-align: center; margin-top: 40px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>UNIVAC-IX Segment Health & Fallback Override Ledger</h1>
+        
+        <!-- Global Telemetry Overview Rollups -->
+        <div class="grid-metrics">
+            <div class="metric-card">
+                <div class="metric-title">Monitored Node Streams</div>
+                <div class="metric-value">9 Active</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Stellar PLA Gridlocks Flushed</div>
+                <div class="metric-value" id="stellar-flushes">{{STELLAR_FLUSHES}}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Institutional Biomass Interventions</div>
+                <div class="metric-value" id="biomass-flushes">{{BIOMASS_FLUSHES}}</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-title">Global Execution Profile</div>
+                <div class="metric-value" style="color: #4ade80;">Nominal</div>
+            </div>
+        </div>
+
+        <!-- SEGMENT 1: CORE SIMULATION & COMPUTE LAYERS -->
+        <h2>1. Core Simulation & Compute Layers</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 12%;">Node ID</th>
+                    <th style="width: 33%;">Subsystem Manifest Layer</th>
+                    <th style="width: 25%;">Hardware Device Assignment</th>
+                    <th style="width: 15%;">Peak Workload</th>
+                    <th style="width: 15%;">State Flag</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>N-01</td>
+                    <td>Tiger_Data_Carver_Core</td>
+                    <td>64_CORE_CPU_STAGING</td>
+                    <td>{{TIGER_PEAK}}%</td>
+                    <td><span class="status-badge nominal">Nominal</span></td>
+                </tr>
+                <tr>
+                    <td>N-04</td>
+                    <td>Bennan_Satellite_Bayes_Core</td>
+                    <td>DUAL_L4_CO_PROCESSING</td>
+                    <td>{{BENNAN_PEAK}} Var</td>
+                    <td><span class="status-badge nominal">Nominal</span></td>
+                </tr>
+                <tr>
+                    <td>N-06</td>
+                    <td>Stellar_PLA_Traffic_Core</td>
+                    <td>DUAL_L4_CO_PROCESSING</td>
+                    <td>{{STELLAR_PEAK}}%</td>
+                    <td><span class="status-badge nominal">Nominal</span></td>
+                </tr>
+              <tr>
+    <td>N-15</td>
+    <td>Stellar_Life_Temporal_Core</td>
+    <td>DUAL_L4_CO_PROCESSING</td>
+    <td>{{STELLAR_LIFE_PEAK}} Exp</td>
+    <td><span class="status-badge nominal">Nominal</span></td>
+</tr>
+              <tr>
+    <td>N-14</td>
+    <td>Stellar_Net_Core</td>
+    <td>DUAL_L4_CO_PROCESSING</td>
+    <td>{{STELLAR_NET_PEAK}} Mbps</td>
+    <td><span class="status-badge nominal">Nominal</span></td>
+    </tr>
+            </tbody>
+        </table>
+
+        <!-- SEGMENT 2: TERRESTRIAL LOGISTICS & INDUSTRIAL BIOMASS -->
+        <h2>2. Terrestrial Logistics & Industrial Biomass</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 12%;">Node ID</th>
+                    <th style="width: 33%;">Subsystem Manifest Layer</th>
+                    <th style="width: 25%;">Hardware Device Assignment</th>
+                    <th style="width: 15%;">Peak Workload</th>
+                    <th style="width: 15%;">State Flag</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>N-02</td>
+                    <td>Turnkey_Industrial_Bridge</td>
+                    <td>NVIDIA_L4_VRAM_0</td>
+                    <td>{{TURNKEY_PEAK}}%</td>
+                    <td><span class="status-badge nominal">Nominal</span></td>
+                </tr>
+                <tr>
+                    <td>N-03</td>
+                    <td>Bridges_Turf_Automation</td>
+                    <td>NVIDIA_L4_VRAM_1</td>
+                    <td>{{TURF_PEAK}}%</td>
+                    <td><span class="status-badge nominal">Nominal</span></td>
+                </tr>
+                <tr>
+                    <td>N-07</td>
+                    <td>Malthusian_Biomass_Orchestrator</td>
+                    <td>64_CORE_PARALLEL_GRID</td>
+                    <td>{{BIOMASS_PEAK}}%</td>
+                    <td><span class="status-badge nominal">Nominal</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- SEGMENT 3: REINFORCED PERIMETERS, SUBTERRANEAN & HYDRAULIC LAYERS -->
+        <h2>3. Perimeters, Subterranean & Hydraulic Flow Layers</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 12%;">Node ID</th>
+                    <th style="width: 33%;">Subsystem Manifest Layer</th>
+                    <th style="width: 25%;">Hardware Device Assignment</th>
+                    <th style="width: 15%;">Peak Workload</th>
+                    <th style="width: 15%;">State Flag</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>N-08</td>
+                    <td>Watchers_Perimeter_Core</td>
+                    <td>64_CORE_CPU_STAGING</td>
+                    <td>{{WATCHERS_PEAK}}%</td>
+                    <td><span class="status-badge nominal">Nominal</span></td>
+                </tr>
+                <tr>
+                    <td>N-09</td>
+                    <td>CAT_Subterranean_Engine</td>
+                    <td>DUAL_L4_CO_PROCESSING</td>
+                    <td>{{CAT_SUB_PEAK}}%</td>
+                    <td><span class="status-badge nominal">Nominal</span></td>
+                </tr>
+                <tr>
+                    <td>N-10</td>
+                    <td>Liquid_Fuel_Flow_Core</td>
+                    <td>DUAL_L4_CO_PROCESSING</td>
+                    <td>{{FUEL_PEAK}}%</td>
+                    <td><span class="status-badge nominal">Nominal</span></td>
+                </tr>
+                <tr>
+                    <td>N-13</td>
+                    <td>Stellar_Punk_Steam_Core</td>
+                    <td>DUAL_L4_CO_PROCESSING</td>
+                    <td>{{STEAMPUNK_PEAK}} PSI</td>
+                    <td><span class="status-badge nominal">Nominal</span></td>
+                </tr>
+                <tr>
+                    <td>N-11</td>
+                    <td>Siemens_S7_PLC_Core</td>
+                    <td>DUAL_L4_CO_PROCESSING</td>
+                    <td>{{SIEMENS_PEAK}}%</td>
+                    <td><span class="status-badge nominal">Nominal</span></td>
+                </tr>
+                <tr>
+                    <td>N-17</td>
+                    <td>Stellar_GRiD_Infrastructure_Core</td>
+                    <td>DUAL_L4_CO_PROCESSING</td>
+                    <td>{{STELLAR_GRID_PEAK}}% Str</td>
+                    <td><span class="status-badge nominal">Nominal</span></td>
+                </tr>
+                <tr>
+                    <td>N-18</td>
+                    <td>Stellar_RANGE_Orchestrator_Core</td>
+                    <td>DUAL_L4_CO_PROCESSING</td>
+                    <td>{{STELLAR_RANGE_PEAK}} m</td>
+                    <td><span class="status-badge nominal">Nominal</span></td>
+                </tr>
+                <tr>
+                  <td>N-19</td>
+                  <td>Qualcomm_DOC_Enforcement_Core</td>
+                  <td>DUAL_L4_CO_PROCESSING</td>
+                  <td>{{QUALCOMM_DOC_PEAK}} Sev</td>
+                  <td><span class="status-badge nominal">Nominal</span></td>
+                </tr>
+<tr><td>N-20</td><td>Stellar_Lock_Core</td><td>DUAL_L4_CO_PROCESSING</td><td>{{LOCK_PEAK}}%</td><td><span class="status-badge nominal">Nominal</span></td></tr>
+<tr><td>N-21</td><td>Stellar_HVAC_Core</td><td>DUAL_L4_CO_PROCESSING</td><td>{{HVAC_PEAK}}%</td><td><span class="status-badge nominal">Nominal</span></td></tr>
+<tr><td>N-22</td><td>Stellar_Aviation_Core</td><td>DUAL_L4_CO_PROCESSING</td><td>{{AVIATION_PEAK}} kts</td><td><span class="status-badge nominal">Nominal</span></td></tr>
+<tr><td>N-23</td><td>Stellar_Astronomy_Core</td><td>DUAL_L4_CO_PROCESSING</td><td>{{ASTRONOMY_PEAK}} Rad</td><td><span class="status-badge nominal">Nominal</span></td></tr>
+            </tbody>
+        </table>
+
+
+
+        
+        <div class="footer">
+            UNIVAC-IX Security Fabric • Telemetry Streamer Live Update • System Date: 2026-10-05
+        </div>
+    </div>
+</body>
+</html>
