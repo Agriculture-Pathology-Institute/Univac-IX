@@ -73,10 +73,9 @@ required_compiled_tokens = [
     "TIGER_PEAK", "BENNAN_PEAK", "STELLAR_PEAK",
     "TURNKEY_PEAK", "TURF_PEAK", "BIOMASS_PEAK",
     "WATCHERS_PEAK", "CAT_SUB_PEAK", "FUEL_PEAK",
-    "SIEMENS_PEAK", "KIRKLAND_PEAK",
-    "STEAMPUNK_PEAK"  # Enforces regex verification for the Stellar-Punk node token
+    "SIEMENS_PEAK", "KIRKLAND_PEAK", "STEAMPUNK_PEAK",
+    "STELLAR_NET_PEAK"  # Enforces regex verification for the Stellar Net node token
 ]
-
         # Scan for raw uncompiled curly-brace patterns (e.g., {{TIGER_PEAK}})
         for token in required_compiled_tokens:
             pattern = f"\\{{\\{{\\s*{token}\\s*\\}}\\}}"
