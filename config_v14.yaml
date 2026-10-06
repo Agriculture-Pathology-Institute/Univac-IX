@@ -1,0 +1,201 @@
+# ==============================================================================
+# UNIVAC-IX CORE FABRIC CONFIGURATION MANAGEMENT
+# Orchestration Matrix for Tiger Nodes, Turnkey Bridges, and Bridges Turf Stages
+# ==============================================================================
+
+global_cluster_settings:
+  cluster_identity: "UNIVAC-IX-PLATFORM-ALPHA"
+  system_ram_capacity_gb: 1024 # 1 TB Hardware Memory Pool Allocator
+  total_system_cpus: 64        # Multi-Core Processing Core Execution Units
+  total_system_gpus: 2         # Dual NVIDIA L4 Dedicated Graphics Engines
+  environment_overrides:
+    RAY_EXPERIMENTAL_NOSET_CUDA_VISIBLE_DEVICES: "1"
+    RAY_ENABLE_UV_RUN_RUNTIME_ENV: "0"
+
+pipeline_stages:
+  - stage_name: "Stage_00_Tiger_Data_Carver"
+    module_class: "cosmos_tiger_orchestrator.CosmosTigerVisPipelineStage"
+    batch_size: 50000
+    resource_allocation:
+      cpus: 24.0
+      gpus: 0.8
+      is_spmd: true
+    data_stream_source: "salvaged_log.txt"
+    visio_tracking_id: "N-01"
+
+  - stage_name: "Stage_01_Turnkey_Industrial_Bridge"
+    module_class: "turnkey_industrial_stage.TurnkeyIndustrialBridgeStage"
+    batch_size: 25000
+    resource_allocation:
+      cpus: 20.0
+      gpus: 0.6
+      is_spmd: true
+    data_stream_source: "salvaged_log.txt"
+    visio_tracking_id: "N-02"
+
+  - stage_name: "Stage_02_Bridges_Turf_Automation"
+    module_class: "bridges_turf_stage.BridgesTurfAutomationStage"
+    batch_size: 15000
+    resource_allocation:
+      cpus: 20.0
+      gpus: 0.6
+      is_spmd: true
+    data_stream_source: "live_turf_stream.raw"
+    visio_tracking_id: "N-03"
+
+telemetry_visio_exporter:
+  output_target_csv: "visio_mapping.csv"
+  refresh_rate_seconds: 1.0
+  hazard_alert_rules:
+    sound_terminal_bell_on_critical: true
+    critical_threshold_percentage: 85.0
+
+  - stage_name: "Stage_03_Bennan_Pattern_Recognition"
+    module_class: "bennan_bayes_stage.BridgesBennanBayesStage"
+    batch_size: 30000
+    resource_allocation:
+      cpus: 16.0
+      gpus: 0.4
+      is_spmd: true
+    data_stream_source: "satellite_telemetry.raw"
+    visio_tracking_id: "N-05"
+
+      - stage_name: "Stage_04_Stellar_PLA_Traffic_Orchestrator"
+    module_class: "stellar_traffic_stage.StellarPlaTrafficOrchestratorStage"
+    batch_size: 40000
+    resource_allocation:
+      cpus: 16.0
+      gpus: 0.4
+      is_spmd: true
+    data_stream_source: "stellar_pla_grid.raw"
+    visio_tracking_id: "N-06"
+
+  - stage_name: "Stage_08_Siemens_S7_Data_Block"
+    module_class: "siemens_s7_stage.SiemensS7DataBlockStage"
+    batch_size: 22000
+    resource_allocation:
+      cpus: 12.0
+      gpus: 0.2
+      is_spmd: true
+    data_stream_source: "siemens_db_registers.raw"
+    visio_tracking_id: "N-11"
+
+      - stage_name: "Stage_09_Kirkland_Cost_Calculator"
+    module_class: "kirkland_calculator_stage.KirklandCostCalculatorStage"
+    batch_size: 45000
+    resource_allocation:
+      cpus: 10.0
+      gpus: 0.1
+      is_spmd: true
+    data_stream_source: "kirkland_supply_ledger.raw"
+    visio_tracking_id: "N-12"
+
+      - stage_name: "Stage_10_Stellar_Punk_Steam"
+    module_class: "stellarpunk_steam_stage.StellarPunkSteamStage"
+    batch_size: 32000
+    resource_allocation:
+      cpus: 10.0
+      gpus: 0.1
+      is_spmd: true
+    data_stream_source: "stellar_steam_kinetics.raw"
+    visio_tracking_id: "N-13"
+
+      - stage_name: "Stage_11_Stellar_Net_Orchestrator"
+    module_class: "stellar_net_stage.StellarNetOrchestratorStage"
+    batch_size: 38000
+    resource_allocation:
+      cpus: 10.0
+      gpus: 0.1
+      is_spmd: true
+    data_stream_source: "stellar_network_traffic.raw"
+    visio_tracking_id: "N-14"
+
+      - stage_name: "Stage_12_Stellar_Life_Time_Travel"
+    module_class: "stellarpunk_time_travel_stage.StellarLifeTimeTravelStage"
+    batch_size: 36000
+    resource_allocation:
+      cpus: 10.0
+      gpus: 0.1
+      is_spmd: true
+    data_stream_source: "stellar_life_trajectories.raw"
+    visio_tracking_id: "N-15"
+
+      - stage_name: "Stage_13_Stellar_Green_World"
+    module_class: "stellar_green_world_stage.StellarGreenWorldStage"
+    batch_size: 26000
+    resource_allocation:
+      cpus: 10.0
+      gpus: 0.1
+      is_spmd: true
+    data_stream_source: "stellar_green_telemetry.raw"
+    visio_tracking_id: "N-16"
+
+      - stage_name: "Stage_14_Stellar_GRiD_Infrastructure"
+    module_class: "stellar_grid_infrastructure_stage.StellarGridInfrastructureStage"
+    batch_size: 34000
+    resource_allocation:
+      cpus: 10.0
+      gpus: 0.1
+      is_spmd: true
+    data_stream_source: "stellar_grid_structures.raw"
+    visio_tracking_id: "N-17"
+
+  - stage_name: "Stage_15_Stellar_RANGE_Orchestrator"
+    module_class: "stellar_range_stage.StellarRangeOrchestratorStage"
+    batch_size: 31000
+    resource_allocation:
+      cpus: 10.0
+      gpus: 0.1
+      is_spmd: true
+    data_stream_source: "stellar_range_boundaries.raw"
+    visio_tracking_id: "N-18"
+
+  - stage_name: "Stage_16_Qualcomm_DOC_Enforcement"
+    module_class: "qualcomm_doc_enforcement.QualcommDocEnforcementStage"
+    batch_size: 40000
+    resource_allocation:
+      cpus: 10.0
+      gpus: 0.1
+      is_spmd: true
+    data_stream_source: "qualcomm_mesh_telemetry.raw"
+    visio_tracking_id: "N-19"
+
+      - stage_name: "Stage_17_Stellar_Lock_Subsystem"
+    module_class: "stellar_lock_stage.StellarLockSubsystemStage"
+    batch_size: 30000
+    resource_allocation:
+      cpus: 4.0
+      gpus: 0.05
+      is_spmd: true
+    data_stream_source: "stellar_lock_telemetry.raw"
+    visio_tracking_id: "N-20"
+
+  - stage_name: "Stage_18_Stellar_Hvac_Atmospheric"
+    module_class: "stellar_hvac_stage.StellarHvacAtmosphericStage"
+    batch_size: 25000
+    resource_allocation:
+      cpus: 4.0
+      gpus: 0.05
+      is_spmd: true
+    data_stream_source: "stellar_hvac_telemetry.raw"
+    visio_tracking_id: "N-21"
+
+  - stage_name: "Stage_19_Stellar_Aviation_Transceiver"
+    module_class: "stellar_aviation_stage.StellarAviationTransceiverStage"
+    batch_size: 38000
+    resource_allocation:
+      cpus: 4.0
+      gpus: 0.05
+      is_spmd: true
+    data_stream_source: "stellar_flight_vectors.raw"
+    visio_tracking_id: "N-22"
+
+  - stage_name: "Stage_20_Stellar_Astronomy_Planet_Engine"
+    module_class: "stellar_astronomy_stage.StellarAstronomyPlanetEngineStage"
+    batch_size: 42000
+    resource_allocation:
+      cpus: 4.0
+      gpus: 0.05
+      is_spmd: true
+    data_stream_source: "stellar_celestial_coords.raw"
+    visio_tracking_id: "N-23"
